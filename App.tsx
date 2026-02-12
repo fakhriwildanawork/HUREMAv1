@@ -6,7 +6,6 @@ import EmployeeList from './components/EmployeeList';
 import EmployeeDetail from './components/EmployeeDetail';
 import LocationList from './components/Location/LocationList';
 import LocationDetail from './components/Location/LocationDetail';
-import LoginPage from './components/Location/LoginPage';
 import UITemplate from './UITemplate';
 import Layout from './components/Layout/Layout';
 import LoadingOverlay from './components/ui/LoadingOverlay';
@@ -14,30 +13,20 @@ import { Employee, Location } from './types';
 import { SupabaseService } from './services/supabase';
 
 const App = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  // Langsung diset true agar tidak perlu login
+  const [isAuthenticated] = useState<boolean>(true);
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [locations, setLocations] = useState<Location[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Check Session & Initial Fetch
+  // Initial Fetch Data
   useEffect(() => {
     const initApp = async () => {
       try {
-        // Cek Auth Session
-        const user = await SupabaseService.getCurrentUser();
-        
-        // Cek apakah ada kredensial Supabase (mendukung nama baru VITE_)
-        // @ts-ignore
-        const hasSupabase = !!(import.meta.env?.VITE_SUPABASE_URL || process.env?.VITE_SUPABASE_URL || process.env?.SUPABASE_URL);
-
-        if (user || !hasSupabase) {
-          setIsAuthenticated(true);
-          await fetchData();
-        } else {
-          setIsAuthenticated(false);
-        }
+        // Langsung ambil data tanpa cek session
+        await fetchData();
       } catch (error) {
-        setIsAuthenticated(false);
+        console.error("Initialization error:", error);
       } finally {
         setIsLoading(false);
       }
@@ -89,7 +78,6 @@ const App = () => {
     setLocations(prev => prev.map(loc => loc.id === updatedLoc.id ? updatedLoc : loc));
     try {
       const savedLoc = await SupabaseService.saveLocation(updatedLoc);
-      // Sync kembali jika database memberikan ID atau transformasi data
       if (savedLoc) {
         setLocations(prev => prev.map(loc => loc.id === updatedLoc.id ? savedLoc : loc));
       }
@@ -109,10 +97,6 @@ const App = () => {
 
   if (isLoading) {
     return <LoadingOverlay isVisible message="Menyiapkan Workspace" submessage="Menghubungkan ke instance cloud HUREMA..." />;
-  }
-
-  if (!isAuthenticated) {
-    return <LoginPage onLoginSuccess={() => setIsAuthenticated(true)} />;
   }
 
   return (

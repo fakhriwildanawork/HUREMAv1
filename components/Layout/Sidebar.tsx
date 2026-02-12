@@ -5,11 +5,9 @@ import {
   LayoutDashboard, 
   Users, 
   Settings, 
-  LogOut,
   X,
   FileText,
   Clock,
-  BookOpen,
   Palette,
   ChevronLeft,
   Menu,
@@ -117,11 +115,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, isCollapsed, onToggl
         <div className={`pt-6 mt-6 border-t border-slate-100 w-full ${isCollapsed ? 'flex flex-col items-center' : ''}`}>
            <SidebarLink to="/ui-template" icon={Palette} label="Design Guide" active={location.pathname === '/ui-template'} isCollapsed={isCollapsed} />
            <SidebarLink to="/settings" icon={Settings} label="Pengaturan" active={location.pathname === '/settings'} isCollapsed={isCollapsed} />
-          
-          <button className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-rose-50 hover:text-rose-600 transition-all mt-8 font-bold text-sm ${isCollapsed ? 'justify-center px-0' : ''}`}>
-            <LogOut size={20} className="shrink-0" />
-            {!isCollapsed && <span className="tracking-tight">Keluar Sistem</span>}
-          </button>
         </div>
       </nav>
     </aside>
