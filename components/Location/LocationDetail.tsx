@@ -16,12 +16,12 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { Location } from '../types';
-import Card from './ui/Card';
-import Button from './ui/Button';
-import Input from './ui/Input';
-import LoadingOverlay from './ui/LoadingOverlay';
-import MapPicker from './ui/MapPicker';
-import Badge from './ui/Badge';
+import Card from '../ui/Card';
+import Button from '../ui/Button';
+import Input from '../ui/Input';
+import LoadingOverlay from '../ui/LoadingOverlay';
+import MapPicker from '../ui/MapPicker';
+import Badge from '../ui/Badge';
 import { DriveService } from '../../services/drive';
 
 const LocationDetail = ({ locations, onUpdate, onDelete }: { 

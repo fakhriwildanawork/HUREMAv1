@@ -12,10 +12,10 @@ import {
   Building2
 } from 'lucide-react';
 import { Location } from '../types';
-import Card from './ui/Card';
-import Badge from './ui/Badge';
-import Input from './ui/Input';
-import Button from './ui/Button';
+import Card from '../ui/Card';
+import Badge from '../ui/Badge';
+import Input from '../ui/Input';
+import Button from '../ui/Button';
 
 const LocationList = ({ locations, onAdd }: { locations: Location[], onAdd: (loc: Location) => void }) => {
   const navigate = useNavigate();

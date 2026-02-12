@@ -2,9 +2,9 @@
 import React, { useState } from 'react';
 import { Mail, Lock, ArrowRight, ShieldCheck } from 'lucide-react';
 import { ASSETS } from '../assets';
-import Button from './ui/Button';
-import Input from './ui/Input';
-import Card from './ui/Card';
+import Button from '../ui/Button';
+import Input from '../ui/Input';
+import Card from '../ui/Card';
 import { SupabaseService } from '../services/supabase';
 
 const LoginPage = ({ onLoginSuccess }: { onLoginSuccess: () => void }) => {
