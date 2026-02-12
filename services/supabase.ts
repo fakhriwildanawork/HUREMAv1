@@ -1,10 +1,25 @@
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@^2.48.1';
 
-// Menggunakan pengecekan aman untuk environment variables
-// Fix: Use process.env directly instead of window.process which is not standard on the Window object
-const supabaseUrl = (process.env.SUPABASE_URL) || '';
-const supabaseAnonKey = (process.env.SUPABASE_ANON_KEY) || '';
+// Fungsi bantuan untuk mengambil env secara aman tanpa menyebabkan ReferenceError
+const getSafeEnv = (key: string): string => {
+  try {
+    // Coba ambil dari process.env (Node/Build time)
+    if (typeof process !== 'undefined' && process.env && process.env[key]) {
+      return process.env[key] as string;
+    }
+    // Coba ambil dari window.process (Polyfill browser)
+    if (typeof window !== 'undefined' && (window as any).process?.env?.[key]) {
+      return (window as any).process.env[key];
+    }
+  } catch (e) {
+    // Abaikan error
+  }
+  return '';
+};
+
+const supabaseUrl = getSafeEnv('SUPABASE_URL');
+const supabaseAnonKey = getSafeEnv('SUPABASE_ANON_KEY');
 
 // Jika tidak ada URL, kita buat client dummy atau log error daripada crash
 if (!supabaseUrl || !supabaseAnonKey) {
