@@ -1,14 +1,14 @@
 
 import React, { useState, useEffect } from 'react';
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
-import Dashboard from './components/Dashboard';
+import Dashboard from './components/Layout/Dashboard';
 import EmployeeList from './components/EmployeeList';
 import EmployeeDetail from './components/EmployeeDetail';
-import LocationList from './components/LocationList';
-import LocationDetail from './components/LocationDetail';
-import LoginPage from './components/LoginPage';
+import LocationList from './components/Location/LocationList';
+import LocationDetail from './components/Location/LocationDetail';
+import LoginPage from './components/Location/LoginPage';
 import UITemplate from './UITemplate';
-import Layout from './components/Layout';
+import Layout from './components/Layout/Layout';
 import LoadingOverlay from './components/ui/LoadingOverlay';
 import { Employee, Location } from './types';
 import { SupabaseService } from './services/supabase';
