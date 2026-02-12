@@ -334,4 +334,5 @@ const EmployeeDetail = ({ employees, onUpdate, onDelete }: {
   );
 };
 
+
 export default EmployeeDetail;
