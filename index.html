@@ -1,9 +1,14 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>HUREMA HRIS</title>
+    <!-- Polyfill process.env untuk browser -->
+    <script>
+      window.process = { env: {} };
+    </script>
     <!-- Leaflet.js CSS for Map Picker -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <script src="https://cdn.tailwindcss.com"></script>
@@ -23,7 +28,7 @@
                 700: '#235e53',
                 800: '#1e4b43',
                 900: '#1a3f38',
-                950: '#005E4E', // Hurema Main
+                950: '#005E4E', 
               },
               secondary: {
                 DEFAULT: '#00E8C1',
@@ -47,17 +52,12 @@
       body { font-family: 'Inter', sans-serif; }
       .animate-fade-in { animation: fadeIn 0.3s ease-out; }
       @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
-      
-      /* Custom scrollbar for a cleaner look */
       ::-webkit-scrollbar { width: 6px; height: 6px; }
       ::-webkit-scrollbar-track { background: transparent; }
       ::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
       ::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
-
-      /* Fix Leaflet default icon issues in some environments */
       .leaflet-container { font-family: 'Inter', sans-serif; }
     </style>
-    <!-- Leaflet.js JS for Map Picker -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script type="importmap">
 {
