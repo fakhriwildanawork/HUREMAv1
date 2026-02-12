@@ -1,6 +1,7 @@
 
+// Fix: Import React and useState to resolve "Cannot find name 'useState'" errors
 import React, { useState } from 'react';
-import { Mail, Lock, ArrowRight, ShieldCheck } from 'lucide-center';
+import { Mail, Lock, ArrowRight, ShieldCheck } from 'lucide-react';
 import { ASSETS } from '../../assets';
 import Button from '../ui/Button';
 import Input from '../ui/Input';
