@@ -4,14 +4,23 @@
  * Berkomunikasi dengan Vercel Serverless Function untuk keamanan API Key.
  */
 
-// Ganti ID ini dengan Folder ID tujuan Anda dari Google Drive
-export const DEFAULT_FOLDER_ID = "1vL82ItStGxRXWvupbpmjeZbZe80IXHqF"; 
+const getSafeEnv = (key: string): string => {
+  // @ts-ignore
+  if (import.meta.env && import.meta.env[key]) return import.meta.env[key];
+  try {
+    if (typeof process !== 'undefined' && process.env && process.env[key]) return process.env[key];
+  } catch (e) {}
+  return '';
+};
+
+// Mengambil Folder ID dari Env atau Fallback ke Default
+export const DEFAULT_FOLDER_ID = getSafeEnv('VITE_GOOGLE_DRIVE_FOLDER_ID') || "1vL82ItStGxRXWvupbpmjeZbZe80IXHqF"; 
 
 export const DriveService = {
   uploadFile: async (file: File, folderId: string = DEFAULT_FOLDER_ID): Promise<string> => {
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('folderId', folderId); // Kirim folderId ke API
+    formData.append('folderId', folderId);
 
     try {
       const response = await fetch('/api/upload', {
@@ -34,7 +43,6 @@ export const DriveService = {
   
   getFileUrl: (fileId: string) => {
     if (!fileId) return `https://picsum.photos/seed/hurema/400/300`;
-    // Gunakan thumbnail link resmi Google Drive
     return `https://lh3.googleusercontent.com/d/${fileId}`;
   }
 };

@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Mail, Lock, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Mail, Lock, ArrowRight, ShieldCheck } from 'lucide-center';
 import { ASSETS } from '../../assets';
 import Button from '../ui/Button';
 import Input from '../ui/Input';
@@ -16,8 +16,11 @@ const LoginPage = ({ onLoginSuccess }: { onLoginSuccess: () => void }) => {
     e.preventDefault();
     setIsLoading(true);
     try {
+      // @ts-ignore
+      const hasSupabase = !!(import.meta.env?.VITE_SUPABASE_URL || process.env?.VITE_SUPABASE_URL || process.env?.SUPABASE_URL);
+
       // Untuk demo cepat, kita gunakan login manual jika Supabase belum di-set
-      if (!process.env.SUPABASE_URL) {
+      if (!hasSupabase) {
         setTimeout(() => {
           onLoginSuccess();
         }, 1000);

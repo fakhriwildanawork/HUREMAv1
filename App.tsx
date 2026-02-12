@@ -26,8 +26,11 @@ const App = () => {
         // Cek Auth Session
         const user = await SupabaseService.getCurrentUser();
         
-        // Untuk kemudahan demo, jika ENV tidak ada, kita anggap auth saja dulu
-        if (user || !process.env.SUPABASE_URL) {
+        // Cek apakah ada kredensial Supabase (mendukung nama baru VITE_)
+        // @ts-ignore
+        const hasSupabase = !!(import.meta.env?.VITE_SUPABASE_URL || process.env?.VITE_SUPABASE_URL || process.env?.SUPABASE_URL);
+
+        if (user || !hasSupabase) {
           setIsAuthenticated(true);
           await fetchData();
         } else {
@@ -85,7 +88,11 @@ const App = () => {
   const handleUpdateLocation = async (updatedLoc: Location) => {
     setLocations(prev => prev.map(loc => loc.id === updatedLoc.id ? updatedLoc : loc));
     try {
-      await SupabaseService.saveLocation(updatedLoc);
+      const savedLoc = await SupabaseService.saveLocation(updatedLoc);
+      // Sync kembali jika database memberikan ID atau transformasi data
+      if (savedLoc) {
+        setLocations(prev => prev.map(loc => loc.id === updatedLoc.id ? savedLoc : loc));
+      }
     } catch (e) {
       console.error("Gagal simpan lokasi ke Supabase:", e);
     }
@@ -101,7 +108,7 @@ const App = () => {
   };
 
   if (isLoading) {
-    return <LoadingOverlay isVisible message="Menyiapkan Workspace" submessage="Menghubungkan ke instance Supabase MID..." />;
+    return <LoadingOverlay isVisible message="Menyiapkan Workspace" submessage="Menghubungkan ke instance cloud HUREMA..." />;
   }
 
   if (!isAuthenticated) {
