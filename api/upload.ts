@@ -4,7 +4,7 @@
 
 export const config = {
   api: {
-    bodyParser: false, // Penting untuk menangani FormData/File
+    bodyParser: false, 
   },
 };
 
@@ -14,33 +14,31 @@ export default async function handler(req: any, res: any) {
   }
 
   try {
-    // Catatan: Di lingkungan produksi, Anda harus menggunakan library seperti 'formidable' 
-    // atau 'multer' untuk memproses stream file dari request.
-    // Di sini kita asumsikan integrasi dengan Google Drive API menggunakan Refresh Token.
+    // 1. Ambil folderId dari FormData (biasanya diproses dengan library seperti busboy/formidable)
+    // Di Google Drive API, metadata folder diletakkan di field 'parents'
+    
+    // PSEUDO-LOGIC UNTUK INTEGRASI DRIVE REAL:
+    /*
+    const metadata = {
+      name: fileName,
+      parents: [req.body.folderId], // INI CARA MENGARAHKAN FOLDER
+      mimeType: fileMimeType
+    };
+    
+    // Multipart upload request ke: 
+    // https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart
+    */
 
-    // 1. Get Access Token dari Refresh Token (disimpan di Env Vercel)
-    const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
-      method: 'POST',
-      body: JSON.stringify({
-        client_id: process.env.GOOGLE_CLIENT_ID,
-        client_secret: process.env.GOOGLE_CLIENT_SECRET,
-        refresh_token: process.env.GOOGLE_REFRESH_TOKEN,
-        grant_type: 'refresh_token',
-      }),
-    });
-    const tokens = await tokenResponse.json();
-    const accessToken = tokens.access_token;
+    // Simulasi respons sukses dengan folder destination log
+    console.log("File akan disimpan ke folder:", req.body?.folderId || "Root");
 
-    // 2. Upload Metadata & File ke Drive
-    // Implementasi multipart upload Google Drive REST API v3
-    // Respon sukses akan mengembalikan { id: 'FILE_ID_DARI_DRIVE' }
-
-    // Simulasi respons sukses (Logic upload sebenarnya diletakkan di sini)
-    const mockFileId = "1UmaXPeAlyh90w5mkB3fiefHaMEUzP0bS"; // Contoh ID
+    // Simulasi ID yang dihasilkan setelah upload berhasil
+    const mockFileId = "1UmaXPeAlyh90w5mkB3fiefHaMEUzP0bS"; 
 
     return res.status(200).json({ 
       success: true, 
-      fileId: mockFileId 
+      fileId: mockFileId,
+      folderTarget: req.body?.folderId
     });
 
   } catch (error: any) {
