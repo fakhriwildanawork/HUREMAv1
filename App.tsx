@@ -1,56 +1,112 @@
 
-import React, { useState } from 'react';
-import { HashRouter, Routes, Route } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Dashboard from './components/Dashboard';
 import EmployeeList from './components/EmployeeList';
 import EmployeeDetail from './components/EmployeeDetail';
 import LocationList from './components/LocationList';
 import LocationDetail from './components/LocationDetail';
-import HRAssistant from './components/HRAssistant';
+import LoginPage from './components/LoginPage';
 import UITemplate from './UITemplate';
 import Layout from './components/Layout';
+import LoadingOverlay from './components/ui/LoadingOverlay';
 import { Employee, Location } from './types';
-
-const INITIAL_EMPLOYEES: Employee[] = [
-  { id: '1', name: 'John Doe', role: 'Senior Developer', department: 'Tech', status: 'Active', joinDate: '2022-01-15', email: 'john.doe@hurema.com' },
-  { id: '2', name: 'Jane Smith', role: 'HR Manager', department: 'Human Resource', status: 'Active', joinDate: '2021-05-10', email: 'jane.smith@hurema.com' },
-  { id: '3', name: 'Robert Brown', role: 'Sales Lead', department: 'Commercial', status: 'On Leave', joinDate: '2023-02-20', email: 'robert.b@hurema.com' },
-  { id: '4', name: 'Maria Garcia', role: 'Project Manager', department: 'Tech', status: 'Active', joinDate: '2022-11-05', email: 'maria.g@hurema.com' },
-  { id: '5', name: 'James Wilson', role: 'Accountant', department: 'Finance', status: 'Terminated', joinDate: '2020-09-12', email: 'james.w@hurema.com' },
-];
-
-const INITIAL_LOCATIONS: Location[] = [
-  { id: '1', name: 'Headquarters Jakarta', address: 'Jl. Jend. Sudirman No. 1, Jakarta Pusat', latitude: -6.2088, longitude: 106.8456, radius_meters: 100, is_active: true },
-  { id: '2', name: 'Branch Office Bandung', address: 'Jl. Asia Afrika No. 10, Bandung', latitude: -6.9175, longitude: 107.6191, radius_meters: 150, is_active: true },
-];
+import { SupabaseService } from './services/supabase';
 
 const App = () => {
-  const [employees, setEmployees] = useState<Employee[]>(INITIAL_EMPLOYEES);
-  const [locations, setLocations] = useState<Location[]>(INITIAL_LOCATIONS);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [locations, setLocations] = useState<Location[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const handleAddEmployee = (newEmp: Employee) => {
+  // Check Session & Initial Fetch
+  useEffect(() => {
+    const initApp = async () => {
+      try {
+        // Cek Auth Session
+        const user = await SupabaseService.getCurrentUser();
+        
+        // Untuk kemudahan demo, jika ENV tidak ada, kita anggap auth saja dulu
+        if (user || !process.env.SUPABASE_URL) {
+          setIsAuthenticated(true);
+          await fetchData();
+        } else {
+          setIsAuthenticated(false);
+        }
+      } catch (error) {
+        setIsAuthenticated(false);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    initApp();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const [empData, locData] = await Promise.all([
+        SupabaseService.getEmployees(),
+        SupabaseService.getLocations()
+      ]);
+      setEmployees(empData as Employee[]);
+      setLocations(locData as Location[]);
+    } catch (e) {
+      console.error("Gagal mengambil data dari Supabase:", e);
+    }
+  };
+
+  const handleAddEmployee = async (newEmp: Employee) => {
     setEmployees(prev => [newEmp, ...prev]);
   };
 
-  const handleUpdateEmployee = (updatedEmp: Employee) => {
+  const handleUpdateEmployee = async (updatedEmp: Employee) => {
     setEmployees(prev => prev.map(emp => emp.id === updatedEmp.id ? updatedEmp : emp));
+    try {
+      await SupabaseService.saveEmployee(updatedEmp);
+    } catch (e) {
+      console.error("Gagal simpan ke Supabase:", e);
+    }
   };
 
-  const handleDeleteEmployee = (id: string) => {
+  const handleDeleteEmployee = async (id: string) => {
     setEmployees(prev => prev.filter(emp => emp.id !== id));
+    try {
+      await SupabaseService.deleteEmployee(id);
+    } catch (e) {
+      console.error("Gagal hapus dari Supabase:", e);
+    }
   };
 
   const handleAddLocation = (newLoc: Location) => {
     setLocations(prev => [newLoc, ...prev]);
   };
 
-  const handleUpdateLocation = (updatedLoc: Location) => {
+  const handleUpdateLocation = async (updatedLoc: Location) => {
     setLocations(prev => prev.map(loc => loc.id === updatedLoc.id ? updatedLoc : loc));
+    try {
+      await SupabaseService.saveLocation(updatedLoc);
+    } catch (e) {
+      console.error("Gagal simpan lokasi ke Supabase:", e);
+    }
   };
 
-  const handleDeleteLocation = (id: string) => {
+  const handleDeleteLocation = async (id: string) => {
     setLocations(prev => prev.filter(loc => loc.id !== id));
+    try {
+      await SupabaseService.deleteLocation(id);
+    } catch (e) {
+      console.error("Gagal hapus lokasi dari Supabase:", e);
+    }
   };
+
+  if (isLoading) {
+    return <LoadingOverlay isVisible message="Menyiapkan Workspace" submessage="Menghubungkan ke instance Supabase MID..." />;
+  }
+
+  if (!isAuthenticated) {
+    return <LoginPage onLoginSuccess={() => setIsAuthenticated(true)} />;
+  }
 
   return (
     <HashRouter>
@@ -63,17 +119,16 @@ const App = () => {
           <Route path="/master/lokasi" element={<LocationList locations={locations} onAdd={handleAddLocation} />} />
           <Route path="/master/lokasi/:id" element={<LocationDetail locations={locations} onUpdate={handleUpdateLocation} onDelete={handleDeleteLocation} />} />
 
-          <Route path="/ai-assistant" element={<HRAssistant />} />
           <Route path="/ui-template" element={<UITemplate />} />
-          <Route path="/attendance" element={<div className="p-12 text-center text-slate-500 bg-white rounded-3xl border-2 border-dashed border-slate-200">Attendance Data synced with Supabase Realtime</div>} />
-          <Route path="/documents" element={<div className="p-12 text-center text-slate-500 bg-white rounded-3xl border-2 border-dashed border-slate-200">Google Drive API Integrated Explorer</div>} />
-          <Route path="/settings" element={<div className="p-12 text-center text-slate-500 bg-white rounded-3xl border-2 border-dashed border-slate-200">Configuration panel for 500 Employee Tier</div>} />
+          <Route path="/attendance" element={<div className="p-12 text-center text-slate-500 bg-white rounded-3xl border-2 border-dashed border-slate-200">Data Presensi Realtime (Supabase)</div>} />
+          <Route path="/documents" element={<div className="p-12 text-center text-slate-500 bg-white rounded-3xl border-2 border-dashed border-slate-200">Google Drive Integrated Explorer</div>} />
+          <Route path="/settings" element={<div className="p-12 text-center text-slate-500 bg-white rounded-3xl border-2 border-dashed border-slate-200">Global System Configuration</div>} />
           
-          <Route path="/master/jadwal" element={<div className="p-12 text-center text-slate-500 bg-white rounded-3xl border-2 border-dashed border-slate-200">Master Data Jadwal Karyawan</div>} />
-          <Route path="/master/performa" element={<div className="p-12 text-center text-slate-500 bg-white rounded-3xl border-2 border-dashed border-slate-200">Performance Management Master</div>} />
-          <Route path="/master/keuangan" element={<div className="p-12 text-center text-slate-500 bg-white rounded-3xl border-2 border-dashed border-slate-200">Financial Records & Payroll Master</div>} />
+          <Route path="/master/jadwal" element={<div className="p-12 text-center text-slate-500 bg-white rounded-3xl border-2 border-dashed border-slate-200">Master Data Jadwal Kerja</div>} />
+          <Route path="/master/performa" element={<div className="p-12 text-center text-slate-500 bg-white rounded-3xl border-2 border-dashed border-slate-200">Performance Management</div>} />
+          <Route path="/master/keuangan" element={<div className="p-12 text-center text-slate-500 bg-white rounded-3xl border-2 border-dashed border-slate-200">Financial & Payroll Master</div>} />
           
-          <Route path="*" element={<Dashboard employees={employees} />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Layout>
     </HashRouter>

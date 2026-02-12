@@ -10,7 +10,6 @@ import {
   FileText,
   Clock,
   BookOpen,
-  BrainCircuit,
   Palette,
   ChevronLeft,
   Menu,
@@ -86,7 +85,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, isCollapsed, onToggl
         <div className="w-full">
           <SidebarLink to="/" icon={LayoutDashboard} label="Dashboard" active={location.pathname === '/'} isCollapsed={isCollapsed} />
           
-          {/* Dropdown Master */}
           <div className="w-full">
             <button
               onClick={toggleMaster}
@@ -94,7 +92,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, isCollapsed, onToggl
             >
               <div className="flex items-center space-x-3">
                 <Database size={20} className="shrink-0" />
-                {!isCollapsed && <span className="font-bold text-sm tracking-tight">Master</span>}
+                {!isCollapsed && <span className="font-bold text-sm tracking-tight">Master Data</span>}
               </div>
               {!isCollapsed && (
                 <ChevronDown size={16} className={`transition-transform duration-200 ${isMasterOpen ? 'rotate-180' : ''}`} />
@@ -103,48 +101,26 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, isCollapsed, onToggl
             
             {isMasterOpen && (
               <div className="mt-1 space-y-1">
-                <SidebarLink to="/master/lokasi" icon={MapPin} label="Lokasi" active={location.pathname === '/master/lokasi'} isCollapsed={isCollapsed} isSubItem />
+                <SidebarLink to="/master/lokasi" icon={MapPin} label="Lokasi Kantor" active={location.pathname === '/master/lokasi'} isCollapsed={isCollapsed} isSubItem />
                 <SidebarLink to="/employees" icon={Users} label="Karyawan" active={location.pathname.startsWith('/employees')} isCollapsed={isCollapsed} isSubItem />
-                <SidebarLink to="/master/jadwal" icon={Clock} label="Jadwal" active={location.pathname === '/master/jadwal'} isCollapsed={isCollapsed} isSubItem />
-                <SidebarLink to="/master/performa" icon={TrendingUp} label="Performa" active={location.pathname === '/master/performa'} isCollapsed={isCollapsed} isSubItem />
-                <SidebarLink to="/master/keuangan" icon={CreditCard} label="Keuangan" active={location.pathname === '/master/keuangan'} isCollapsed={isCollapsed} isSubItem />
-                <SidebarLink to="/documents" icon={FileText} label="Dokumen" active={location.pathname === '/documents'} isCollapsed={isCollapsed} isSubItem />
+                <SidebarLink to="/master/jadwal" icon={Clock} label="Jadwal Kerja" active={location.pathname === '/master/jadwal'} isCollapsed={isCollapsed} isSubItem />
+                <SidebarLink to="/master/performa" icon={TrendingUp} label="Review Performa" active={location.pathname === '/master/performa'} isCollapsed={isCollapsed} isSubItem />
+                <SidebarLink to="/master/keuangan" icon={CreditCard} label="Payroll & Pajak" active={location.pathname === '/master/keuangan'} isCollapsed={isCollapsed} isSubItem />
+                <SidebarLink to="/documents" icon={FileText} label="Cloud Archive" active={location.pathname === '/documents'} isCollapsed={isCollapsed} isSubItem />
               </div>
             )}
           </div>
 
-          <SidebarLink to="/attendance" icon={Clock} label="Attendance Hub" active={location.pathname === '/attendance'} isCollapsed={isCollapsed} />
+          <SidebarLink to="/attendance" icon={Clock} label="Log Presensi" active={location.pathname === '/attendance'} isCollapsed={isCollapsed} />
         </div>
         
         <div className={`pt-6 mt-6 border-t border-slate-100 w-full ${isCollapsed ? 'flex flex-col items-center' : ''}`}>
-           <SidebarLink to="/ai-assistant" icon={BrainCircuit} label="AI Consultant" active={location.pathname === '/ai-assistant'} isCollapsed={isCollapsed} />
            <SidebarLink to="/ui-template" icon={Palette} label="Design Guide" active={location.pathname === '/ui-template'} isCollapsed={isCollapsed} />
-           {!isCollapsed ? (
-             <a 
-              href="https://ai.google.dev" 
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-slate-50 transition-colors"
-            >
-              <BookOpen size={20} className="shrink-0" />
-              <span className="font-bold text-sm tracking-tight">API Docs</span>
-            </a>
-           ) : (
-             <a 
-              href="https://ai.google.dev" 
-              target="_blank"
-              rel="noopener noreferrer"
-              title="API Docs"
-              className="flex items-center justify-center w-full py-3 rounded-xl text-slate-500 hover:bg-slate-50 transition-colors"
-            >
-              <BookOpen size={20} />
-            </a>
-           )}
-          <SidebarLink to="/settings" icon={Settings} label="Global Settings" active={location.pathname === '/settings'} isCollapsed={isCollapsed} />
+           <SidebarLink to="/settings" icon={Settings} label="Pengaturan" active={location.pathname === '/settings'} isCollapsed={isCollapsed} />
           
           <button className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-rose-50 hover:text-rose-600 transition-all mt-8 font-bold text-sm ${isCollapsed ? 'justify-center px-0' : ''}`}>
             <LogOut size={20} className="shrink-0" />
-            {!isCollapsed && <span className="tracking-tight">Sign Out</span>}
+            {!isCollapsed && <span className="tracking-tight">Keluar Sistem</span>}
           </button>
         </div>
       </nav>

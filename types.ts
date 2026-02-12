@@ -28,9 +28,3 @@ export interface AttendanceRecord {
   absent: number;
   late: number;
 }
-
-// Added Message interface for Gemini conversation history
-export interface Message {
-  role: 'user' | 'model';
-  content: string;
-}

@@ -1,10 +1,9 @@
+
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { 
   Bell, 
   Search, 
-  Menu, 
-  BrainCircuit 
+  Menu 
 } from 'lucide-react';
 
 interface NavbarProps {
@@ -21,23 +20,25 @@ const Navbar: React.FC<NavbarProps> = ({ onMenuToggle }) => (
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
         <input 
           type="text" 
-          placeholder="Search records..." 
+          placeholder="Cari data karyawan..." 
           className="pl-10 pr-4 py-2 bg-slate-50 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary-950 w-64 outline-none transition-all"
         />
       </div>
     </div>
     
     <div className="flex items-center space-x-4">
-      <Link to="/ai-assistant" className="p-2 text-primary-950 bg-primary-50 hover:bg-primary-100 rounded-xl flex items-center gap-2 transition-all">
-        <BrainCircuit size={20} />
-        <span className="text-xs font-bold hidden lg:inline uppercase tracking-widest">Hurema AI</span>
-      </Link>
       <button className="p-2 text-slate-500 hover:bg-slate-100 rounded-xl relative">
         <Bell size={20} />
         <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
       </button>
-      <div className="h-10 w-10 rounded-xl bg-primary-950 flex items-center justify-center text-white font-bold border border-primary-950 cursor-pointer shadow-md">
-        AD
+      <div className="flex items-center gap-3 pl-4 border-l border-slate-100">
+        <div className="text-right hidden sm:block">
+          <p className="text-xs font-black text-slate-900 leading-none">Admin HR</p>
+          <p className="text-[10px] text-slate-400 font-bold uppercase tracking-tighter">PT MID</p>
+        </div>
+        <div className="h-10 w-10 rounded-xl bg-primary-950 flex items-center justify-center text-white font-bold border border-primary-950 cursor-pointer shadow-md">
+          HR
+        </div>
       </div>
     </div>
   </header>
