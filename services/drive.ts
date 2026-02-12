@@ -5,7 +5,7 @@
  */
 
 export const DriveService = {
-  uploadFile: async (file: File) => {
+  uploadFile: async (file: File): Promise<string> => {
     const formData = new FormData();
     formData.append('file', file);
 
@@ -16,7 +16,8 @@ export const DriveService = {
       });
 
       if (!response.ok) {
-        throw new Error('Gagal upload ke Google Drive');
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Gagal upload ke Google Drive');
       }
 
       const result = await response.json();
@@ -28,7 +29,8 @@ export const DriveService = {
   },
   
   getFileUrl: (fileId: string) => {
-    // URL thumbnail/view Google Drive
+    // Menggunakan proxy thumbnail Google Drive
+    if (!fileId) return `https://picsum.photos/seed/hurema/200/200`;
     return `https://lh3.googleusercontent.com/d/${fileId}`;
   }
 };
