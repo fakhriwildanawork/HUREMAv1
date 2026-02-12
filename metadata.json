@@ -1,0 +1,8 @@
+{
+  "name": "HUREMA HRIS",
+  "description": "Professional HRIS with Zero-Latency UI using Optimistic Creation Strategy. Integrated with Google Drive & Supabase.",
+  "requestFramePermissions": [
+    "camera",
+    "geolocation"
+  ]
+}
