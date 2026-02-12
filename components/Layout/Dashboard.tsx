@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { 
   Users, 
@@ -19,7 +20,7 @@ import {
   AreaChart,
   Area 
 } from 'recharts';
-import { Employee } from '../types';
+import { Employee } from '../../types';
 
 const attendanceData = [
   { name: 'Mon', present: 480, absent: 20 },

@@ -11,7 +11,7 @@ import {
   XCircle,
   Building2
 } from 'lucide-react';
-import { Location } from '../types';
+import { Location } from '../../types';
 import Card from '../ui/Card';
 import Badge from '../ui/Badge';
 import Input from '../ui/Input';

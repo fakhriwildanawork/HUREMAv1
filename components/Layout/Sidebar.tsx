@@ -19,7 +19,7 @@ import {
   CreditCard,
   Database
 } from 'lucide-react';
-import { ASSETS } from '../assets';
+import { ASSETS } from '../../assets';
 
 interface SidebarProps {
   isOpen: boolean;
